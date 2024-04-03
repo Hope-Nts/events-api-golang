@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"example.com/rest-api/db"
 	"example.com/rest-api/models"
@@ -14,9 +15,30 @@ func main() {
 	server := gin.Default()
 
 	server.GET("/events", getEvents) // this is how we register a handler for http methods
+	server.GET("/events/:id", getEvent)
 	server.POST("/events", createEvent)
 
 	server.Run(":8080") // localhost:8080
+}
+
+func getEvent(context *gin.Context) {
+	id, err := strconv.ParseInt(context.Param("id"), 10, 64)
+
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"message": "could not parse event id"})
+		return
+	}
+	event, err := models.GetEventById(id)
+
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "could not retrieve event. try again later"})
+		return
+	}
+
+	context.JSON(http.StatusOK, gin.H{
+		"message": "event successfully retrieved",
+		"event":   event,
+	})
 }
 
 func getEvents(context *gin.Context) {
