@@ -1,9 +1,10 @@
-PUT http://localhost:8080/events/2
+PUT http://localhost:8080/events/4
 content-type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5kb2VAZW1haWwuY29tIiwiZXhwIjoxNzEyNTMwNzYzLCJ1c2VySWQiOjN9.XoZNQcCoH0GaP6OA6mFl8O473_gzHoNfQEFICOTcQsU
 
 {
-    "name": "John Doe",
-    "description": "Handsome",
+    "name": "Test event 4",
+    "description": "Crazy fun event",
     "location": "International",
     "dateTime": "2011-10-05T14:48:00.000Z"
 }
