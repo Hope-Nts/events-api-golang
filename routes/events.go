@@ -6,8 +6,45 @@ import (
 	"strconv"
 
 	"example.com/rest-api/models"
+	"example.com/rest-api/utils"
 	"github.com/gin-gonic/gin"
 )
+
+func createEvent(context *gin.Context) {
+	token := context.Request.Header.Get("Authorization")
+
+	if token == "" {
+		context.JSON(http.StatusUnauthorized, gin.H{"message": "Not authorized"})
+		return
+	}
+
+	userId, err := utils.VerifyToken(token)
+
+	if err != nil {
+		context.JSON(http.StatusUnauthorized, gin.H{"message": "Not authorized"})
+		return
+	}
+
+	var event models.Event
+	err = context.ShouldBindJSON(&event)
+	fmt.Println(err)
+
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"message": "could not parse request data."})
+		return
+	}
+
+	event.UserID = userId
+
+	err = event.Save()
+
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "could not create event, try again later"})
+		return
+	}
+
+	context.JSON(http.StatusCreated, gin.H{"message": "event created", "event": event})
+}
 
 func getEvent(context *gin.Context) {
 	id, err := strconv.ParseInt(context.Param("id"), 10, 64)
@@ -37,29 +74,6 @@ func getEvents(context *gin.Context) {
 		return
 	}
 	context.JSON(http.StatusOK, events)
-}
-
-func createEvent(context *gin.Context) {
-	var event models.Event
-	err := context.ShouldBindJSON(&event)
-	fmt.Println(err)
-
-	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"message": "could not parse request data."})
-		return
-	}
-
-	event.ID = 1
-	event.UserID = 1
-
-	err = event.Save()
-
-	if err != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{"message": "could not create event, try again later"})
-		return
-	}
-
-	context.JSON(http.StatusCreated, gin.H{"message": "event created", "event": event})
 }
 
 func updateEvent(context *gin.Context) {

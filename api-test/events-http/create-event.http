@@ -1,9 +1,10 @@
 POST http://localhost:8080/events
 content-type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5kb2VAZW1haWwuY29tIiwiZXhwIjoxNzEyNTI4NTE4LCJ1c2VySWQiOjN9.yF5qhdWGbwyU_YKD7bfyTTlF4oJUzJ9uhPb1VlDYWAc
 
 {
-    "name": "Hope",
-    "description": "Handsome",
+    "name": "Test event",
+    "description": "fun event",
     "location": "International",
     "dateTime": "2011-10-05T14:48:00.000Z"
 }
